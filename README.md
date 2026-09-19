@@ -74,6 +74,27 @@ flowchart LR
 6. Em paralelo, `metadata.NowPlaying` consulta o SMTC a cada 0,5 s. Troca de
    música zera a adaptação de mood e decide se existe faixa aprendida.
 
+## Módulos do motor
+
+| Arquivo | Papel |
+|---|---|
+| `spotify_sync.py` | motor: loopback, onset, BeatTracker, cor, `OutputScheduler`, replay |
+| `dsp.py` | SuperFlux-lite (ODF por banda, compressão log `ODF_LOG_GAMMA`), rastreador de tempo |
+| `modes.py` | modos do painel: `ColorFX` (ALIEN/PICANTE), `Meditation`, `Reggae`, `AutoDrop`, `Structure`, `FastBeat` (batida seca acima de `FAST_BPM`) |
+| `diaglog.py` | log de diagnóstico em `logs/motor-AAAAMMDD.jsonl` + resumo por faixa (`logs/faixas.jsonl`), métrica por intervalo de batida |
+| `track_memory.py` | memória de faixa (aprende no PC, reproduz pela posição do SMTC) |
+| `metadata.py` | título/artista/posição pelo SMTC do Windows |
+
+Ferramentas em `tools/`: `engine_offline.py <bpm> <segundos> [CHAVE=valor…]` roda o
+motor sem fita nem áudio, com clique sintético, e mede pico→piso por batida;
+`log_report.py [--detalhe]` lê os logs do `diaglog`. Testes:
+
+```bash
+.venv\Scripts\python -m unittest tools.test_modes tools.test_dsp tools.test_diaglog
+```
+
+Design dos modos e do painel: [docs/specs/2026-09-18-modos-design.md](docs/specs/2026-09-18-modos-design.md).
+
 ## Instalação
 
 Só Windows (loopback WASAPI e SMTC). Testado em Python 3.13.
@@ -119,7 +140,11 @@ Ajustes que mais mudam o resultado, na ordem em que vale mexer:
 
 `hub_page.html` é o front-end do painel NEXUS (porta 8770): stream SSE a 20 Hz,
 histórico de cor, alerta de sinal parado, badge LOOPBACK/MUDO/REPLAY, sliders
-com trailing de 80 ms e marcação do que ainda não foi salvo. O servidor Python
+com trailing de 80 ms e marcação do que ainda não foi salvo. Os efeitos
+exclusivos ficam num seletor **CENA** (NORMAL · ALIEN · PICANTE · MEDITAÇÃO ·
+REGGAE) com os ajustes da cena logo abaixo; os demais modos ficam em grupos
+com contador de ligados; o log de eventos tem filtro por tipo. A captura acima
+é do layout anterior. O servidor Python
 desse painel, junto com os módulos de multi-caixa Bluetooth (`multi_out`,
 `acoustic_sync`, `speaker_cal`, `bass_dsp`), fita BLE e ambiente de tela, existe
 hoje só como bytecode na máquina do autor — a fonte foi perdida e a

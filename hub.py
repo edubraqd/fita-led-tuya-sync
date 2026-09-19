@@ -60,7 +60,12 @@ GROUPS = {
         ("REFRACTORY", "Refratario do onset [s]", 0.05, 0.30, False),
         ("ONSET_LOW_HZ", "Banda kick min [Hz]", 10, 100, True),
         ("ONSET_HIGH_HZ", "Banda kick max [Hz]", 100, 500, True),
-        ("LOCK_TOL", "Tolerancia p/ travar ritmo", 0.05, 0.30, False),
+        ("LOCK_TOL", "Tolerancia p/ travar ritmo (fallback IBI)", 0.05, 0.30, False),
+        ("ODF_LOG_GAMMA", "Compressao log do espectro (0=linear)", 0.0, 50.0, False),
+        ("TEMPO_MIN_BPM", "Faixa de tempo: BPM minimo", 50, 120, True),
+        ("TEMPO_MAX_BPM", "Faixa de tempo: BPM maximo", 100, 240, True),
+        ("TEMPO_PRIOR_BPM", "BPM preferido (prior)", 80, 160, True),
+        ("TEMPO_LOCK_CONF", "Confianca p/ travar (tempograma)", 0.05, 0.80, False),
     ],
 }
 
