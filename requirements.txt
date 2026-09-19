@@ -1,0 +1,9 @@
+numpy
+PyAudioWPatch
+tinytuya>=1.18
+winrt-runtime
+winrt-Windows.Media.Control
+winrt-Windows.Foundation
+winrt-Windows.Foundation.Collections
+winrt-Windows.Storage.Streams
+opencv-python-headless   # so para calibrate.py (webcam)
